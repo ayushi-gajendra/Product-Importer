@@ -15,7 +15,7 @@ services:
           property: connectionString
       - key: REDIS_URL
         fromService:
-          type: key-value
+          type: keyvalue
           name: product-importer-kv
           property: connectionString
 
@@ -33,11 +33,11 @@ services:
           property: connectionString
       - key: REDIS_URL
         fromService:
-          type: key-value
+          type: keyvalue
           name: product-importer-kv
           property: connectionString
 
-  - type: key-value
+  - type: keyvalue
     name: product-importer-kv
     plan: free
 
