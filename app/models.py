@@ -11,7 +11,6 @@ class Product(db.Model):
     description = db.Column(db.String)
     active = db.Column(db.Boolean, default=True)
 
-# Case-insensitive unique index on lower(sku)
 Index("ux_products_sku_lower", func.lower(Product.sku), unique=True)
 
 
