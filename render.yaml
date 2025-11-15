@@ -38,11 +38,13 @@ services:
           type: redis
           name: product-importer-redis
           property: connectionString
+  
+  - type: redis
+    name: product-importer-redis
+    plan: free
 
 databases:
   - name: product-importer-db
     plan: free
 
-redis:
-  - name: product-importer-redis
-    plan: free
+
