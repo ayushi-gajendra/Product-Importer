@@ -15,8 +15,8 @@ services:
           property: connectionString
       - key: REDIS_URL
         fromService:
-          type: redis
-          name: product-importer-redis
+          type: key-value
+          name: product-importer-kv
           property: connectionString
 
   - type: worker
@@ -33,14 +33,13 @@ services:
           property: connectionString
       - key: REDIS_URL
         fromService:
-          type: redis
-          name: product-importer-redis
+          type: key-value
+          name: product-importer-kv
           property: connectionString
 
-  - type: redis
-    name: product-importer-redis
+  - type: key-value
+    name: product-importer-kv
     plan: free
-    ipAllowList: []
 
 databases:
   - name: product-importer-db
