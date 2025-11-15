@@ -1,4 +1,4 @@
-# Product Importer – Backend Engineer Assignment
+# Product Importer
 
 A scalable CSV-based product import system built with Flask, Celery, PostgreSQL, and Render deployment.
 Designed to handle up to 500,000 products with real-time upload progress, product management UI, webhook management, and bulk operations.
@@ -212,3 +212,4 @@ Ensures SKU uniqueness across A123, a123, A123.
 ## Author
 
 Ayushi Gajendra
+
