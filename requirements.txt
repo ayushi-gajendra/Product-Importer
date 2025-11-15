@@ -1,0 +1,8 @@
+flask
+flask_sqlalchemy
+sqlalchemy
+psycopg2-binary
+celery
+redis
+python-multipart
+requests
