@@ -7,41 +7,44 @@ Designed to handle up to 500,000 products with real-time upload progress, produc
 
 ## Features
 
-### STORY 1 — CSV Upload & Import
+### CSV Product Import
 
-* Upload CSV file through web UI
-* Handles up to 500,000 rows
-* Background import using Celery
-* Duplicate SKU updates (case-insensitive unique index)
-* Real-time progress (Redis + polling)
+* Upload large CSV files (up to 500,000 rows) using a simple web interface
+* Background processing using Celery to avoid timeouts
+* Case-insensitive SKU uniqueness with automatic overwrite on duplicates
+* Real-time import progress with percentage and status messages
+* Optimized for long-running, large-scale imports
 
-### STORY 1A — Real-Time Progress UI
+### Product Management Interface
 
-* Progress percentage
-* Status messages
-* Smooth polling-based updates
-* Error handling and retry support
+* List all products with pagination
+* Filter by SKU, name, description, or active status
+* Create new products
+* Inline edit existing products
+* Delete products individually
+* Clean, minimal HTML + JavaScript UI
 
-### STORY 2 — Product Management UI
+### Bulk Product Operations
 
-* List products
-* Pagination
-* Filtering (SKU, Name, Description, Active)
-* Create, Update, Delete
-* Minimal, simple HTML/JS UI
+* Delete all products at once
+* Confirmation dialog before destructive actions
+* UI immediately refreshes on success
 
-### STORY 3 — Bulk Delete
+### Webhook Configuration
 
-* Delete ALL products
-* Confirmation dialog
-* Status refresh
+* Add, edit, enable, disable, and delete webhook endpoints
+* Choose event type for each webhook
+* Trigger test webhook requests from the UI
+* View last response status and response latency (ms)
 
-### STORY 4 — Webhook Management
+### Backend and Architecture
 
-* Add, edit, delete webhook
-* Enable/disable webhook
-* Test webhook call
-* View last response status & time
+* Flask REST API using Blueprint modular structure
+* SQLAlchemy ORM with PostgreSQL
+* Celery worker for long-running background tasks
+* Redis/Key-Value store for progress tracking and Celery communication
+* Dockerized for local development
+* Deployable on Render (Web Service + Worker + Postgres + Key-Value)
 
 ---
 
@@ -212,4 +215,5 @@ Ensures SKU uniqueness across A123, a123, A123.
 ## Author
 
 Ayushi Gajendra
+
 
