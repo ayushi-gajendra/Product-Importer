@@ -7,7 +7,7 @@ services:
     autoDeploy: true
     dockerCommand: flask run --host=0.0.0.0 --port=8000
     ipAllowList:
-      - 0.0.0.0/0
+  - source: 0.0.0.0/0
     envVars:
       - key: FLASK_APP
         value: app.main
@@ -16,10 +16,7 @@ services:
           name: product-importer-db
           property: connectionString
       - key: REDIS_URL
-        fromService:
-          type: keyvalue
-          name: product-importer-kv
-          property: connectionString
+        value: ${REDIS_URL}
 
   - type: worker
     name: product-importer-worker
@@ -29,21 +26,14 @@ services:
     autoDeploy: true
     dockerCommand: celery -A app.tasks worker --loglevel=info
     ipAllowList:
-      - 0.0.0.0/0
+  - source: 0.0.0.0/0
     envVars:
       - key: DATABASE_URL
         fromDatabase:
           name: product-importer-db
           property: connectionString
       - key: REDIS_URL
-        fromService:
-          type: keyvalue
-          name: product-importer-kv
-          property: connectionString
-
-  - type: keyvalue
-    name: product-importer-kv
-    plan: free
+        value: ${REDIS_URL}
 
 databases:
   - name: product-importer-db
