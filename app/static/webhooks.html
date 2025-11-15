@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Webhooks</h2>
+
+<button onclick="load()">Load Webhooks</button>
+
+<div id="hooks"></div>
+
+<h3>Create Webhook</h3>
+<input id="url" placeholder="Webhook URL">
+<input id="event" placeholder="Event (default import_complete)">
+<label><input type="checkbox" id="enabled" checked> Enabled</label>
+<button onclick="createHook()">Create</button>
+
+<script>
+async function load() {
+    const res = await fetch("/api/webhooks");
+    const hooks = await res.json();
+
+    const div = document.getElementById("hooks");
+    div.innerHTML = "";
+
+    hooks.forEach(h => {
+        const item = document.createElement("div");
+        item.textContent = `${h.id} | ${h.url} | ${h.event} | ${h.enabled}`;
+
+        const test = document.createElement("button");
+        test.textContent = "Test";
+        test.onclick = () => testHook(h.id);
+
+        const del = document.createElement("button");
+        del.textContent = "Delete";
+        del.onclick = () => deleteHook(h.id);
+
+        item.appendChild(test);
+        item.appendChild(del);
+        div.appendChild(item);
+    });
+}
+
+async function createHook() {
+    await fetch("/api/webhooks", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            url: document.getElementById("url").value,
+            event: document.getElementById("event").value || "import_complete",
+            enabled: document.getElementById("enabled").checked
+        })
+    });
+    load();
+}
+
+async function deleteHook(id) {
+    await fetch(`/api/webhooks/${id}`, { method: "DELETE" });
+    load();
+}
+
+async function testHook(id) {
+    await fetch(`/api/webhooks/${id}/test`, { method: "POST" });
+    load();
+}
+
+load();
+</script>
+
+</body>
+</html>

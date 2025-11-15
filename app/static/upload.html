@@ -2,7 +2,7 @@
 <html>
 <body>
 
-<h3>CSV Upload</h3>
+<h2>CSV Upload</h2>
 
 <input type="file" id="file" accept=".csv">
 <button onclick="upload()">Upload</button>
@@ -16,6 +16,8 @@ async function upload() {
         alert("Select a CSV file first");
         return;
     }
+
+    document.getElementById("progress").innerText = "Uploading...";
 
     const form = new FormData();
     form.append("file", file);
@@ -35,10 +37,10 @@ async function poll(jobId) {
     const box = document.getElementById("progress");
 
     const interval = setInterval(async () => {
-        const res = await fetch(`/status/${jobId}`);   // <-- FIXED
+        const res = await fetch(`/status/${jobId}`);
         const data = await res.json();
 
-        box.innerText = `${data.percent}% - ${data.message}`;
+        box.innerText = data.percent + "% — " + data.message;
 
         if (data.percent >= 100) {
             clearInterval(interval);

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Products</h2>
+
+<!-- Filters -->
+<input id="fSku" placeholder="SKU filter">
+<input id="fName" placeholder="Name filter">
+<input id="fDesc" placeholder="Description filter">
+<label><input type="checkbox" id="fActive"> Active only</label>
+<button onclick="load(1)">Search</button>
+
+<div id="list"></div>
+
+<!-- Pagination -->
+<div>
+  <button onclick="prevPage()">Prev</button>
+  <span id="pageInfo"></span>
+  <button onclick="nextPage()">Next</button>
+</div>
+
+<h3>Create Product</h3>
+
+<input id="sku" placeholder="SKU">
+<input id="name" placeholder="Name">
+<input id="desc" placeholder="Description">
+<button onclick="createProduct()">Create</button>
+<button onclick="bulkDelete()">Delete ALL Products</button>
+
+<script>
+let currentPage = 1;
+let maxPages = 1;
+
+async function load(page) {
+    if (page) currentPage = page;
+
+    const params = new URLSearchParams({
+        page: currentPage,
+        sku: document.getElementById("fSku").value,
+        name: document.getElementById("fName").value,
+        description: document.getElementById("fDesc").value
+    });
+
+    if (document.getElementById("fActive").checked) {
+        params.append("active", "true");
+    }
+
+    const res = await fetch("/api/products?" + params.toString());
+    const data = await res.json();
+
+    maxPages = data.pages;
+    document.getElementById("list").innerHTML = "";
+
+    data.items.forEach(p => {
+        const div = document.createElement("div");
+        div.textContent = p.id + " | " + p.sku + " | " + p.name;
+
+        const del = document.createElement("button");
+        del.textContent = "Delete";
+        del.onclick = () => removeProduct(p.id);
+
+        div.appendChild(del);
+        document.getElementById("list").appendChild(div);
+    });
+
+    document.getElementById("pageInfo").innerText = `Page ${currentPage} of ${maxPages}`;
+}
+
+function nextPage() {
+    if (currentPage < maxPages) load(currentPage + 1);
+}
+
+function prevPage() {
+    if (currentPage > 1) load(currentPage - 1);
+}
+
+async function createProduct() {
+    await fetch("/api/products", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            sku: document.getElementById("sku").value,
+            name: document.getElementById("name").value,
+            description: document.getElementById("desc").value
+        })
+    });
+    load(currentPage);
+}
+
+async function removeProduct(id) {
+    await fetch(`/api/products/${id}`, { method: "DELETE" });
+    load(currentPage);
+}
+
+async function bulkDelete() {
+    if (!confirm("Are you sure? This cannot be undone.")) return;
+
+    const res = await fetch("/api/products", { method: "DELETE" });
+
+    if (res.ok) {
+        alert("All products deleted.");
+        load(1);
+    } else {
+        alert("Failed to delete products.");
+    }
+}
+
+// Initial load
+load(1);
+</script>
+
+</body>
+</html>
