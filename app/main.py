@@ -17,6 +17,11 @@ def create_app():
     @app.route("/health")
     def health():
         return jsonify({"status": "ok"}), 200
+    
+    # Home page
+    @app.route("/")
+    def ui():
+        return app.send_static_file("upload.html")
 
     # Upload Endpoint
     @app.route("/upload", methods=["POST"])

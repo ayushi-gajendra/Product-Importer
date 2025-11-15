@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h3>CSV Upload</h3>
+
+<input type="file" id="file" accept=".csv">
+<button onclick="upload()">Upload</button>
+
+<div id="progress"></div>
+
+<script>
+async function upload() {
+    const file = document.getElementById("file").files[0];
+    if (!file) {
+        alert("Select a CSV file first");
+        return;
+    }
+
+    const form = new FormData();
+    form.append("file", file);
+
+    const res = await fetch("/upload", { method: "POST", body: form });
+    const data = await res.json();
+
+    if (!data.job_id) {
+        document.getElementById("progress").innerText = "Upload failed.";
+        return;
+    }
+
+    poll(data.job_id);
+}
+
+async function poll(jobId) {
+    const box = document.getElementById("progress");
+
+    const interval = setInterval(async () => {
+        const res = await fetch(`/status/${jobId}`);   // <-- FIXED
+        const data = await res.json();
+
+        box.innerText = `${data.percent}% - ${data.message}`;
+
+        if (data.percent >= 100) {
+            clearInterval(interval);
+        }
+    }, 1000);
+}
+</script>
+
+</body>
+</html>
