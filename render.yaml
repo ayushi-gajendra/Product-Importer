@@ -2,12 +2,10 @@ services:
   - type: web
     name: product-importer-api
     env: docker
-    repo: https://github.com/YOUR_USERNAME/YOUR_REPO.git
+    repo: https://github.com/ayushi-gajendra/Product-Importer.git
     plan: free
     autoDeploy: true
     dockerCommand: flask run --host=0.0.0.0 --port=8000
-    publish:
-      - service: product-importer-api
     envVars:
       - key: FLASK_APP
         value: app.main
@@ -25,7 +23,7 @@ services:
   - type: worker
     name: product-importer-worker
     env: docker
-    repo: https://github.com/YOUR_USERNAME/YOUR_REPO.git
+    repo: https://github.com/ayushi-gajendra/Product-Importer.git
     plan: free
     autoDeploy: true
     dockerCommand: celery -A app.tasks worker --loglevel=info
