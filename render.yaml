@@ -10,13 +10,11 @@ services:
       - key: FLASK_APP
         value: app.main
       - key: DATABASE_URL
-        fromService:
-          type: postgres
+        fromDatabase:
           name: product-importer-db
           property: connectionString
       - key: REDIS_URL
         fromService:
-          type: redis
           name: product-importer-redis
           property: connectionString
 
@@ -29,22 +27,19 @@ services:
     dockerCommand: celery -A app.tasks worker --loglevel=info
     envVars:
       - key: DATABASE_URL
-        fromService:
-          type: postgres
+        fromDatabase:
           name: product-importer-db
           property: connectionString
       - key: REDIS_URL
         fromService:
-          type: redis
           name: product-importer-redis
           property: connectionString
-  
+
   - type: redis
     name: product-importer-redis
     plan: free
+    ipAllowList: []
 
 databases:
   - name: product-importer-db
     plan: free
-
-
